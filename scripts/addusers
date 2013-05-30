@@ -1,0 +1,52 @@
+#! /bin/bash
+#
+# addusers team-name1 ... team-nameN
+# where the arguments are the names of the teams to created.
+# If the name is longer than 8 characters (wtmp/libc-5 constraint), the user is not created.
+# If the home directory of the team of the already exists, the user is not created.
+# Otherwise the user is created (a member of group ittltl),  and other stuff done.
+#
+
+# Check tweak to allow members of ittltl group to sudo java to gain memory access for pi4j
+sudo grep -q %ittltl /etc/sudoers
+if [ $? -ne 0 ]
+then
+  echo -e "\e[00;31m"
+  echo -e "Note: the following line must be added to /etc/sudoers to enable java to be run with privilege for memory access"
+  echo -e "	%ittltl ALL= /usr/bin/java"
+  echo -e "\e[00m"
+fi
+
+# Create ittltl group if not present
+sudo grep -q ittltl /etc/group
+if [ $? -ne 0 ]
+then
+  sudo addgroup ittltl
+fi
+
+# Create users - iterate over command line arguments (the team names)
+for i in "$@"
+do
+  if [ -d "/home/$i" ]
+  then
+    echo "User $i already exists"
+    continue
+  fi
+  if [ ${#i} -gt 8 ]
+  then
+    echo "User name $i longer than 8 characters - not creating"
+    continue
+  fi
+
+  echo "Creating user $i"
+  sudo adduser --ingroup ittltl -gecos "" $i <<HERE
+$i
+$i
+HERE
+# TODO - what's actually required if using the git protocol
+  sudo mkdir /home/$i/.ssh
+  sudo chown $i:ittltl /home/$i/.ssh
+  sudo cp -a ~/.ssh/id_rsa /home/$i/.ssh
+  sudo chmod 400 /home/$i/.ssh/id_rsa
+  sudo chown $i:ittltl /home/$i/.ssh/id_rsa
+done

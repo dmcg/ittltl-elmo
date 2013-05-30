@@ -1,0 +1,13 @@
+#! /bin/bash
+#
+# delusers user1 ... userN
+# deletes the listed users by name, deliberately skipping the RasPi names Desktop & pi
+#
+
+for i in "$@"
+do
+  if [ "$i" == "Desktop" ]; then continue; fi
+  if [ "$i" == "pi" ]; then continue; fi
+  echo "Deleting user $i"
+  sudo deluser --remove-home $i
+done
