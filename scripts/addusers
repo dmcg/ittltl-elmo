@@ -43,10 +43,4 @@ do
 $i
 $i
 HERE
-# TODO - what's actually required if using the git protocol
-  sudo mkdir /home/$i/.ssh
-  sudo chown $i:ittltl /home/$i/.ssh
-  sudo cp -a ~/.ssh/id_rsa /home/$i/.ssh
-  sudo chmod 400 /home/$i/.ssh/id_rsa
-  sudo chown $i:ittltl /home/$i/.ssh/id_rsa
 done
