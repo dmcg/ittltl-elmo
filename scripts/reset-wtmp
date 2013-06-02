@@ -1,0 +1,6 @@
+#! /bin/bash
+#
+# Empty the wtmp files used by last so that only new (excluding current) logins are recorded.
+# (note avoidance of > as it's the command that's sudo'ed, not the redirect)
+#
+false | sudo tee /var/log/wtmp
