@@ -26,13 +26,15 @@ import json
 import re
 import os
 
+IGNORE = ("Desktop", "pi", "reboot", "root")
+
 def parse(now, line):
     if len(line.strip()) == 0:
         return None
     if line.startswith("wtmp"):
         return None
     user = line[0:9].strip()
-    if user == "Desktop" or user == "pi":
+    if user in IGNORE:
         return None
     try:
         deltas = re.split("((\d+)\+)?(\d{2}):(\d{2})", line[91:-1])
