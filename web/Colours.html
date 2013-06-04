@@ -5,7 +5,29 @@
 		<title>Team Colours</title>
 	</head>
 	<body>
-		<div style="text-align:center;font-size:135px;-moz-column-count:4;-webkit-column-count:4;column-count:4">
+		<script>
+			onload = function() {
+				var style = document.getElementById('div').style;
+				var width = window.innerWidth;
+				var fontSize = '47px';
+				if (width >= 1024)
+					fontSize = '61px';
+				if (width >= 1280)
+					fontSize = '63px';
+				if (width >= 1600)
+					fontSize = '80px';
+				if (width >= 1920)
+					fontSize = '100px';
+				if (width >= 2048)
+					fontSize = '110px';
+				if (width >= 2560)
+					fontSize = '135px';
+				style.fontSize = fontSize;
+				console.log(window.innerWidth, fontSize);
+			}
+		</script>
+		<div id="div" onload='init();'
+				style="text-align:center;-moz-column-count:4;-webkit-column-count:4;column-count:4">
 			<div style="color:Black">Black</div>
 			<div style="color:Blue">Blue</div>
 			<div style="color:Brown">Brown</div>
