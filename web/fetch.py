@@ -25,7 +25,7 @@ import datetime
 
 # password!		user@host
 remotes = [\
-('raspberry', 'pi@raspberrypi2.local'),
+('raspberry', 'pi@raspberrypi.local'),
 ('raspberry', 'pi@raspberrypi2.local')]
 
 IGNORE = ("Desktop", "pi", "reboot", "root")
@@ -58,10 +58,14 @@ def parseLineOfLast(now, line):
 
 def fetchRemoteInfo(remotehost, password):
 	# Command gets necessary info (date-time, list of users, last info) from 'server'
-	lines = unsafeShell('pi@raspberrypi2.local', 'raspberry', 'date; ls /home; echo ===; last -F')
+	print remotehost,
+	lines = unsafeShell(remotehost, password, 'date; ls /home; echo ===; last -F')
+	if len(lines) == 0:
+		return {}
 
 	# Known team names on server (all with zero time spent initially)
 	ix = lines.index('===\n')
+
 	teams = [name[:-1] for name in lines[1:ix] if name[:-1] not in IGNORE]
 	results = {team: 0 for team in teams}
 
@@ -82,7 +86,7 @@ while True:
 	activities = dict()
 
 	# Fetch all the machines' activity info & merge it
-	for remote in enumerate(remotes):
+	for remote in remotes:
 		aMachine = fetchRemoteInfo(remote[1], remote[0])
 		for team in aMachine.keys():
 			if team in activities:
