@@ -62,6 +62,7 @@ def parseLineOfLast(now, line):
     if line.startswith("wtmp"):
         return None
     user = line[0:9].strip()
+    loggedIn = 'still logged in' in line
     try:
         deltas = re.split("((\d+)\+)?(\d{2}):(\d{2})", line[91:-1])
         days = deltas[2]
@@ -70,7 +71,7 @@ def parseLineOfLast(now, line):
         end = now
         start = time.strptime(line[43:63], "%b %d %H:%M:%S %Y")
         deltaT = time.mktime(end) - time.mktime(start)
-    return (user, deltaT)
+    return (user, deltaT, loggedIn)
 
 def fetchRemoteInfo(remotehost, password):
 	# Command gets necessary info (date-time, list of users, last info) from 'server'
@@ -83,7 +84,7 @@ def fetchRemoteInfo(remotehost, password):
 	ix = lines.index('===\n')
 
 	teams = [name[:-1] for name in lines[1:ix] if name[:-1] not in IGNORE]
-	results = {team: 0 for team in teams}
+	results = {team: (0, False) for team in teams}
 
 	# Now on 'server'
 	now = time.strptime(lines[0][4:], "%b %d %H:%M:%S UTC %Y\n")
@@ -93,8 +94,12 @@ def fetchRemoteInfo(remotehost, password):
 		a = parseLineOfLast(now, line)
 		if a is None:
 			continue
-		if a[0] in results:
-			results[a[0]] = results[a[0]] + a[1]
+		name = a[0]
+		if name in results:
+			seconds = results[name][0] + a[1]
+			loggedIn = results[name][1] | a[2]
+			results[name] = (seconds, loggedIn)
+	print results
 	return results
 
 while True:

@@ -70,7 +70,8 @@ function draw(dataString, status) {
 		t.balance = (t.name in finished
 				? endTime - new Date(finished[t.name]) 
 				: balance) / 1000
-					- piFactor * login[key];
+					- piFactor * login[key][0];
+		t.loggedIn = login[key][1]
 		spend.push(t);
 	}
 	spend.sort(function(a, b) {return b.balance - a.balance;});
@@ -90,7 +91,7 @@ function drawTeam(y, team) {
 	ctx.translate(0, y);
 
 	// Do the text
-	ctx.font="40px Arial";
+	ctx.font = team.loggedIn ? "italic bold 50px Arial" : "40px Arial";
 	ctx.textAlign = 'center';
 	ctx.fillStyle = team.name;
 	ctx.fillText(team.name, 100, 60);
