@@ -63,7 +63,7 @@ function draw(data, status) {
 	for (key in activity) {
 		var t = new Object();
 		t.name = String(key);
-		t.time = activity[key];
+		t.time = activity[key][0];
 		times.push(t);
 	}
 	times.sort(function(a, b) {return a.time - b.time;});
