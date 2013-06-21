@@ -4,7 +4,8 @@
 	x={
 		"session": {
 			"end": "2013-06-21 18:00",		(end of the session)
-			"pi-factor": 1					(scaling factor on time logged in on the pi)
+			"pi-factor": 1,					(scaling factor on time logged in on the pi)
+			"barDuration": 5.5				(bar duration in hours for scaling)
 		},
 		"login": {
 			"tomato": 10,					(team name & logged in seconds on pi)
@@ -24,6 +25,7 @@ var ACTIVITY_NAME = 'activity.jsonp';
 var INTERVAL = 1000;
 
 var ctx = null;
+var barDuration = 5
 
 function init() {
 	// Grab the canvas element
@@ -55,6 +57,7 @@ function draw(dataString, status) {
 	var finished = data["finished"]
 	try {
 		piFactor = data["session"]["pi-factor"]
+		barDuration = data["session"]["bar-duration"]
 	} catch (TypeError) {
 		dontPanic()
 	}
@@ -98,7 +101,16 @@ function drawTeam(y, team) {
 	ctx.textAlign = 'right';
 
 	if (team.balance > 0) {
-		ctx.fillRect(400, 10, team.balance / 50, 70);
+		barWidth = ctx.canvas.width - 420
+		durationSeconds = 3600 * barDuration
+		width = barWidth * team.balance / durationSeconds
+
+		ctx.fillRect(400, 10, width, 70);
+
+		ctx.strokeStyle="black";
+		ctx.rect(400, 10, barWidth, 70)
+		ctx.stroke();
+
 		ctx.fillStyle = "black"
 	} else {
 		ctx.fillStyle = "red";

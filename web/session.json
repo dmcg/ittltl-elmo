@@ -1,7 +1,8 @@
 {
 	"session": {
 		"end": "2013-06-21 23:00",
-		"pi-factor": 2
+		"pi-factor": 2,
+		"bar-duration": 6
 	},
 	"finished": {
 		"example": "2013-06-21 17:17"
