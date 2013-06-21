@@ -1,11 +1,27 @@
 # Runs commands on one or more connected machines (RasPis) to collect login info for teams
 #
-# Merges the info into the file activity.jsonp for consumption by an HTML5 page - see analogue_clock.html/.js
+# Merges the info into the file activity.jsonp for consumption by an HTML5 page - see burn_down.html/.js
 # activity.jsonp has the form:
-#	{"red": 2580.0, "green": 131940.0, "blue": 4500.0}
+#	x={
+#		"session": {
+#			"end": "2013-06-21 18:00",		(end of the session)
+#			"pi-factor": 1					(scaling factor on time logged in on the pi)
+#		},
+#		"login": {
+#			"tomato": 10,					(team name & logged in seconds on pi)
+#			"erac": 0.0,
+#			"gold": 20,
+#			"lime": 0
+#		},
+#		finished: {
+#			"unknown": "2013-06-21 12:00",	(team named and wall time team finished)
+#			"erac": "2013-06-21 13:00"
+#		}
+#	}
 # where:
 #	all possible team names (i.e. all users except as listed in IGNORE) on the RasPis are
-#	listed with cumulative logged-in time for each.
+#	listed with cumulative logged-in time for each,
+#	together with session & finished info from session.json
 #
 # 'last' output is formatted thus...
 #          1         2         3         4         5         6         7         8         9
@@ -83,23 +99,34 @@ def fetchRemoteInfo(remotehost, password):
 
 while True:
 	time.sleep(2)
-	activities = dict()
+
+	try:
+		fp = open('session.json', 'r')
+		data = json.load(fp)
+		fp.close()
+	except (ValueError, IOError) as e:
+		if type(e) != IOError:
+			fp.close()
+		print ">>>> Failing to read session.json <<<<<", e
+		data = {}
+
+	data['login'] = {}
 
 	# Fetch all the machines' activity info & merge it
 	for remote in remotes:
 		aMachine = fetchRemoteInfo(remote[1], remote[0])
 		for team in aMachine.keys():
-			if team in activities:
-				activities[team] = activities[team] + aMachine[team]
+			if team in data['login']:
+				data['login'][team] = data['login'][team] + aMachine[team]
 			else:
-				activities[team] = aMachine[team]
+				data['login'][team] = aMachine[team]
 
-	print activities
+	print data
 
 	# Write activity.jsonp
 	fp = open('activity.jsonp', 'w')
-	fp.write('activities=')
-	json.dump(activities, fp)
+	fp.write('x=')
+	json.dump(data, fp)
 	fp.close()
 
 
