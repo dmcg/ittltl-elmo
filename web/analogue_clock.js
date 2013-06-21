@@ -56,7 +56,7 @@ function draw(data, status) {
 
 	// Parse updated activity info
 	var now = new Date();
-	var activity = eval(activities);
+	var activity = eval(data)["login"];
 
 	// Sort activity by time ascending (NB hence has to be objects)
 	times = [];
