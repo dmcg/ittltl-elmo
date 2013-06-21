@@ -9,57 +9,45 @@
 			onload = function() {
 				var style = document.getElementById('div').style;
 				var width = window.innerWidth;
-				var fontSize = '47px';
+				var fontSize = '53px';
 				if (width >= 1024)
-					fontSize = '61px';
+					fontSize = '75px';
 				if (width >= 1280)
-					fontSize = '63px';
+					fontSize = '76px';
 				if (width >= 1600)
-					fontSize = '80px';
+					fontSize = '90px';
 				if (width >= 1920)
-					fontSize = '100px';
-				if (width >= 2048)
 					fontSize = '110px';
+				if (width >= 2048)
+					fontSize = '120px';
 				if (width >= 2560)
-					fontSize = '135px';
+					fontSize = '155px';
 				style.fontSize = fontSize;
 				console.log(window.innerWidth, fontSize);
 			}
 		</script>
 		<div id="div" onload='init();'
-				style="text-align:center;-moz-column-count:4;-webkit-column-count:4;column-count:4">
+				style="text-align:center;-moz-column-count:3;-webkit-column-count:3;column-count:3">
 			<div style="color:Black">Black</div>
 			<div style="color:Blue">Blue</div>
 			<div style="color:Brown">Brown</div>
 			<div style="color:Coral">Coral</div>
 			<div style="color:Crimson">Crimson</div>
 			<div style="color:Cyan">Cyan</div>
-			<div style="color:Fuchsia">Fuchsia</div>
 			<div style="color:Gold">Gold</div>
 			<div style="color:Gray">Gray</div>
 			<div style="color:Green">Green</div>
-			<div style="color:Indigo">Indigo</div>
 			<div style="color:Lime">Lime</div>
 			<div style="color:Magenta">Magenta</div>
-			<div style="color:Maroon">Maroon</div>
 			<div style="color:Navy">Navy</div>
 			<div style="color:Olive">Olive</div>
 			<div style="color:Orange">Orange</div>
-			<div style="color:Orchid">Orchid</div>
 			<div style="color:Peru">Peru</div>
-			<div style="color:Pink">Pink</div>
-			<div style="color:Plum">Plum</div>
 			<div style="color:Purple">Purple</div>
 			<div style="color:Red">Red</div>
-			<div style="color:Salmon">Salmon</div>
-			<div style="color:Sienna">Sienna</div>
 			<div style="color:Silver">Silver</div>
-			<div style="color:Tan">Tan</div>
 			<div style="color:Teal">Teal</div>
-			<div style="color:Thistle">Thistle</div>
 			<div style="color:Tomato">Tomato</div>
-			<div style="color:Violet">Violet</div>
-			<div style="color:Wheat">Wheat</div>
 		</div>
 	</body>
 </html>
