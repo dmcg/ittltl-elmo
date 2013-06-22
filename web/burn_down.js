@@ -65,6 +65,7 @@ function draw(dataString, status) {
 	// Collect cumulative spend then sort, largest balance wins (NB hence have to be objects)
 	var endTime = new Date(data["session"]["end"])
 	var balance = (endTime - new Date())
+	console.log('endTime', endTime)
 
 	spend = [];
 	for (key in login) {
@@ -93,13 +94,14 @@ function drawTeam(y, team) {
 	ctx.save();
 	ctx.translate(0, y);
 
-	// Do the text
-	ctx.font = team.loggedIn ? "italic bold 50px Arial" : "40px Arial";
+	// Do the team name (showing if logged)
+	ctx.font = team.loggedIn ? "italic bold 45px Arial" : "40px Arial";
 	ctx.textAlign = 'center';
 	ctx.fillStyle = team.name;
 	ctx.fillText(team.name, 100, 60);
 	ctx.textAlign = 'right';
 
+	// Draw outlned bar (if balance +ve)
 	if (team.balance > 0) {
 		barWidth = ctx.canvas.width - 420
 		durationSeconds = 3600 * barDuration
@@ -115,8 +117,14 @@ function drawTeam(y, team) {
 	} else {
 		ctx.fillStyle = "red";
 	}
-	ctx.fillText('\u00A3' + Math.round(team.balance), 360, 60);
 	
+	// Draw balance numerically (red for -ve)
+	prefix = team.balance > 0 ? ' ' : '-'
+	millis = Math.abs(1000 * team.balance)
+	timeStr = prefix + new Date(millis).toTimeString().substring(0,8)
+	//console.log(team.name, timeStr, Math.round(team.balance))
+	ctx.fillText(timeStr, 380, 60);
+
 	// Restore the previous drawing state
 	ctx.restore();
 }
