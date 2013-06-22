@@ -7,6 +7,10 @@
 #			"end": "2013-06-21 18:00",		(end of the session)
 #			"pi-factor": 1					(scaling factor on time logged in on the pi)
 #		},
+#		"remotes": [
+#			["raspberry", "pi@raspberrypi.local"],	(list of remotes to interrogate)
+#			["raspberry", "pi@raspberrypi2.local"]
+#		],
 #		"login": {
 #			"tomato": 10,					(team name & logged in seconds on pi)
 #			"erac": 0.0,
@@ -38,11 +42,6 @@ import re
 import json
 import time
 import datetime
-
-# password!		user@host
-remotes = [\
-('raspberry', 'pi@raspberrypi.local'),
-('raspberry', 'pi@raspberrypi2.local')]
 
 IGNORE = ("Desktop", "pi", "reboot", "root")
 
@@ -115,6 +114,7 @@ while True:
 		print ">>>> Failing to read session.json <<<<<", e
 		data = {}
 
+	remotes = data['remotes']
 	data['login'] = {}
 
 	# Fetch all the machines' activity info & merge it
@@ -122,7 +122,9 @@ while True:
 		aMachine = fetchRemoteInfo(remote[1], remote[0])
 		for team in aMachine.keys():
 			if team in data['login']:
-				data['login'][team] = data['login'][team] + aMachine[team]
+				seconds  = data['login'][team][0] + aMachine[team][0]
+				loggedIn = data['login'][team][1] | aMachine[team][1]
+				data['login'][team] = (seconds, loggedIn)
 			else:
 				data['login'][team] = aMachine[team]
 
