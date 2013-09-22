@@ -66,6 +66,9 @@ def parseLineOfLast(now, line):
         deltas = re.split("((\d+)\+)?(\d{2}):(\d{2})", line[91:-1])
         days = deltas[2]
         deltaT = datetime.timedelta(hours=int(deltas[3]), minutes=int(deltas[4]), days=0 if days is None else int(days)).total_seconds()
+        print deltaT, deltas
+        if (deltaT == 0.0):
+	        deltaT = 30
     except IndexError:
         end = now
         start = time.strptime(line[43:63], "%b %d %H:%M:%S %Y")

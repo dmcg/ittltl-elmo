@@ -2,13 +2,14 @@
 	"session": {
 		"end": "2013-06-23 18:00",
 		"pi-factor": 3.1415927,
-		"bar-duration": 5
+		"bar-duration": 4
 	},
 	"remotes": [
 		["raspberry", "pi@raspberrypi.local"],
 		["raspberry", "pi@raspberrypi2.local"]
 	],
 	"finished": {
-		"example": "2013-06-21 17:17"
+		"blue": "2013-06-23 17:04",
+		"green": "2013-06-23 17:18"
 	}
 }
