@@ -4,14 +4,18 @@
 	x={
 		"session": {
 			"end": "2013-06-21 18:00",		(end of the session)
-			"pi-factor": 1,					(scaling factor on time logged in on the pi)
-			"barDuration": 5.5				(bar duration in hours for scaling)
+			"session-factor": 100,			(multiplier for number of runs)
+			"seconds-factor": 200,			(multiplier for cumulative run-time)
+			"bar-duration": 5.5				(bar duration in hours for scaling)
 		},
+		"remotes": [
+			["raspberry", "pi@raspberrypi.local"],	(list of remotes to interrogate)
+			["raspberry", "pi@raspberrypi2.local"]
+		],
 		"login": {
-			"tomato": 10,					(team name & logged in seconds on pi)
-			"erac": 0.0,
-			"gold": 20, 
-			"lime": 0
+			'tomato': (36, 1.6200000000000008),	(teamname: (number of runs, cumulative time of runs) )
+			'green': (3, 0.44000000000000006),
+			'red': (4, 1.92)
 		},
 		finished: {
 			"unknown": "2013-06-21 12:00",	(team named and wall time team finished)
@@ -56,7 +60,8 @@ function draw(dataString, status) {
 	var login = data["login"];
 	var finished = data["finished"]
 	try {
-		piFactor = data["session"]["pi-factor"]
+		sessionFactor = data["session"]["session-factor"]
+		secondsFactor = data["session"]["seconds-factor"]
 		barDuration = data["session"]["bar-duration"]
 	} catch (TypeError) {
 		dontPanic()
@@ -65,17 +70,15 @@ function draw(dataString, status) {
 	// Collect cumulative spend then sort, largest balance wins (NB hence have to be objects)
 	var endTime = new Date(data["session"]["end"])
 	var balance = (endTime - new Date())
-	console.log('endTime', endTime)
+	//console.log('endTime', endTime)
 
 	spend = [];
 	for (key in login) {
 		var t = new Object();
 		t.name = String(key);
-		t.balance = (t.name in finished
-				? endTime - new Date(finished[t.name]) 
-				: balance) / 1000
-					- piFactor * login[key][0];
-		t.loggedIn = login[key][1]
+		t.balance = t.name in finished
+				? (endTime - new Date(finished[t.name])) / 1000
+				: balance / 1000 - spending(t.name, login[key][0], login[key][1]);
 		spend.push(t);
 	}
 	spend.sort(function(a, b) {return b.balance - a.balance;});
@@ -94,14 +97,14 @@ function drawTeam(y, team) {
 	ctx.save();
 	ctx.translate(0, y);
 
-	// Do the team name (showing if logged)
-	ctx.font = team.loggedIn ? "italic bold 45px Arial" : "40px Arial";
+	// Do the team name
+	ctx.font = "40px Arial";
 	ctx.textAlign = 'center';
 	ctx.fillStyle = team.name;
 	ctx.fillText(team.name, 100, 60);
 	ctx.textAlign = 'right';
 
-	// Draw outlned bar (if balance +ve)
+	// Draw outlined bar (if balance +ve)
 	if (team.balance > 0) {
 		barWidth = ctx.canvas.width - 420
 		durationSeconds = 3600 * barDuration
@@ -127,6 +130,12 @@ function drawTeam(y, team) {
 
 	// Restore the previous drawing state
 	ctx.restore();
+}
+
+function spending(name, count, seconds) {
+	var result = sessionFactor * count + secondsFactor * seconds;
+	console.log(name, count, seconds, result);
+	return result;
 }
 
 function dontPanic() {

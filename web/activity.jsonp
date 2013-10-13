@@ -1,0 +1,1 @@
+x={"login": {"tomato": [36, 1.6200000000000008], "green": [3, 0.44000000000000006], "red": [4, 1.92]}, "remotes": [["erac", "erac@raspberrypi2.local"]], "session": {"bar-duration": 4, "session-factor": 100, "end": "2013-10-13 22:00", "seconds-factor": 200}, "finished": {"blue": "2013-10-13 20:04", "green": "2013-10-13 21:10"}}

@@ -1,15 +1,15 @@
 {
 	"session": {
-		"end": "2013-06-23 18:00",
-		"pi-factor": 3.1415927,
+		"end": "2013-10-13 22:00",
+		"session-factor": 100,
+		"seconds-factor": 200,
 		"bar-duration": 4
 	},
 	"remotes": [
-		["raspberry", "pi@raspberrypi.local"],
-		["raspberry", "pi@raspberrypi2.local"]
+		["erac", "erac@raspberrypi2.local"]
 	],
 	"finished": {
-		"blue": "2013-06-23 17:04",
-		"green": "2013-06-23 17:18"
+		"blue": "2013-10-13 20:04",
+		"green": "2013-10-13 21:10"
 	}
 }
