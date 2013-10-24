@@ -38,7 +38,7 @@ try:
     os.chdir('ittltl')
 
     branchStatus = subprocess.check_output('git branch -r | grep %s | wc -l' % teamname, stderr=subprocess.STDOUT, shell=True)
-    sys.stderr.write('Branch status givess [%s]\n' % branchStatus)
+    sys.stderr.write('Branch %s status givess [%s]\n' % (teamname, branchStatus[0:1]))
     if branchStatus == '0\n':
         raise IOError, '<b>SORRY</b> - no branch called %s has been pushed to the repo yet' % teamname
 
@@ -55,17 +55,18 @@ except (NameError, IOError) as e:
 except (subprocess.CalledProcessError) as e:
     output += e.output + e.__str__()
 
-# Calculate user's elapsed time, say zero if exception in in git phase
+# Calculate user's elapsed time, say -1 if exception in in git phase
 try:
     end = os.times()
     delta = end[4] - start[4]
 except NameError:
-    delta = 0
+    delta = -1
 
-# 'increment' the appropriate team counter
-f = open(home + 'team-stats', 'a')
-f.write('%s,%s,%.2f\n' % (teamname, now, delta))
-f.close()
+# 'increment' the appropriate team counter as long as something ran
+if delta != -1:
+    f = open(home + 'team-stats', 'a')
+    f.write('%s,%s,%.2f\n' % (teamname, now, delta))
+    f.close()
 
 # A bit of logging
 sys.stderr.write('Script for [%s] (elapsed %.2f)\n' % (teamname, delta))
