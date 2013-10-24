@@ -36,6 +36,12 @@ try:
     else:
         output += subprocess.check_output('git clone git://raspberrypi2.local/git/ittltl.git', shell=True)
     os.chdir('ittltl')
+
+    branchStatus = subprocess.check_output('git branch -r | grep %s | wc -l' % teamname, stderr=subprocess.STDOUT, shell=True)
+    sys.stderr.write('Branch status givess [%s]\n' % branchStatus)
+    if branchStatus == '0\n':
+        raise IOError, '<b>SORRY</b> - no branch called %s has been pushed to the repo yet' % teamname
+
     output += subprocess.check_output('git checkout --track origin/%s' % teamname, stderr=subprocess.STDOUT, shell=True)
 
     # Ensure team's script is executable & run it
