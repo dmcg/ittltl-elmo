@@ -13,14 +13,14 @@ mkdir -p ~/checkouts
 # Install pi4j
 cd ~/checkouts
 wget https://pi4j.googlecode.com/files/pi4j-1.0-SNAPSHOT.deb
-sudo dpkg -i pi4j-1.0.SNAPSHOT.deb
+sudo dpkg -i pi4j-1.0-SNAPSHOT.deb
 
 # Install WiringPi-Python
 cd ~/checkouts
 git clone https://github.com/WiringPi/WiringPi-Python.git
 cd WiringPi-Python/
 git submodule update --init
-sudo apt-get install python2.7-dev python-setuptools
+sudo apt-get install python-dev python-setuptools
 sudo python setup.py install
 
 # Let java and python run for our build server without password
