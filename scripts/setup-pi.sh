@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 
 # Install AVAHI and IPV6 so that it has a name and we can find it again
 sudo apt-get update
