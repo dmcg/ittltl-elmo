@@ -8,7 +8,7 @@ sudo update-rc.d avahi-daemon defaults
 echo ipv6 | sudo tee -a /etc/modules
 echo Needs reboot to apply
 
-mkdir ~/checkouts
+mkdir -p ~/checkouts
 
 # Install pi4j
 cd ~/checkouts
